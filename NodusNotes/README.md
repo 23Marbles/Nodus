@@ -9,7 +9,7 @@ This project serves two purposes:
 
 The result should be a powerful and fast mathematical assistant. It should help with creating proofs, understanding theorems and applying them to real world scenarios. Part of this will be a glorified calculator but designed in such a way to help you visualize the problems you are solving.
 
-Read the [purpose statement](purpose.md)
+Read the [purpose statement](./Purpose.md).
 
 ## Goals
 
