@@ -1,16 +1,35 @@
 use crate::repr::id::{EndpointInersection, PointId, Segment};
 
 #[derive(Debug, Clone, PartialEq)]
+struct MidPoint {
+    point: PointId,
+    segment: Segment,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+struct EqualLength {
+    segment1: Segment,
+    segment2: Segment,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+struct Colinear {
+    point1: PointId,
+    point2: PointId,
+    point3: PointId,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub enum Fact {
-    Midpoint(PointId, Segment),
-    EqualLength(Segment, Segment),
-    Colinear(PointId, PointId, PointId),
+    Midpoint(MidPoint),
+    EqualLength(EqualLength),
+    Colinear(Colinear),
 }
 
 impl Fact {
-    pub fn derive_facts(&self) -> Vec<Fact> {
+    pub fn derive_facts(&self) -> Vec<Self> {
         match self {
-            Fact::Midpoint(point, segment) => {
+            Fact::Midpoint(MidPoint { point, segment }) => {
                 let (a, b, c) = (&segment.a, point, &segment.b);
 
                 if b == a || b == c || segment.is_degenerate() {
@@ -18,22 +37,76 @@ impl Fact {
                 }
 
                 vec![
-                    Fact::EqualLength(
-                        Segment::from_points(a.clone(), b.clone()),
-                        Segment::from_points(b.clone(), c.clone()),
-                    ),
-                    Fact::Colinear(a.clone(), b.clone(), c.clone()),
+                    Fact::EqualLength(EqualLength {
+                        segment1: Segment::from_points(a.clone(), b.clone()),
+                        segment2: Segment::from_points(b.clone(), c.clone()),
+                    }),
+                    Fact::Colinear(Colinear {
+                        point1: a.clone(),
+                        point2: b.clone(),
+                        point3: c.clone(),
+                    }),
                 ]
             }
-            Fact::EqualLength(segment, segment1) => {
-                let _ = (segment, segment1);
-                Vec::with_capacity(0)
+            Fact::EqualLength(EqualLength { segment1, segment2 }) => {
+                let _ = (segment1, segment2);
+                Vec::new()
             }
-            Fact::Colinear(point, point1, point2) => {
-                let _ = (point, point1, point2);
-                Vec::with_capacity(0)
+            Fact::Colinear(Colinear {
+                point1,
+                point2,
+                point3,
+            }) => {
+                let _ = (point1, point2, point3);
+                Vec::new()
             }
         }
+    }
+
+    fn binary_derivision(&self, other: &Fact) -> Option<Self> {
+        match (self, other) {
+            (Fact::EqualLength(eq_len), Fact::Colinear(colinear))
+            | (Fact::Colinear(colinear), Fact::EqualLength(eq_len)) => {
+                from_colinear_eq_len(colinear, eq_len)
+            }
+            _ => todo!(),
+        }
+    }
+}
+
+fn from_colinear_eq_len(colinear: &Colinear, eq_len: &EqualLength) -> Option<Fact> {
+    let Colinear { point1: col_a, point2: col_b, point3: col_c }
+    let EqualLength { segment1: eq_len1, segment2: eq_len2 } = eq_len;
+
+    let EndpointInersection { overlap, distinct } = eq_len1.endpoint_intersection(eq_len2);
+
+    let center = if overlap.len() == 1 {
+        overlap[0]
+    } else {
+        return None;
+    };
+
+    let (end1, end2) = if distinct.len() == 2 {
+        (distinct[0], distinct[1])
+    } else {
+        return None;
+    };
+
+    // TODO: make this more efficient
+    let points = [col_a, col_b, col_c];
+    let mut hit = [false; 3];
+
+    for (p, hit) in points.into_iter().zip(hit.iter_mut()) {
+        *hit = p == center || p == end1 || p == end2;
+    }
+
+    if hit.into_iter().any(|b| !b) {
+        None
+    } else {
+        Some(Fact::Midpoint(
+            center.clone(),
+            Segment::from_points(end1.clone(), end2.clone()),
+        ))
     }
 }
 
@@ -43,60 +116,6 @@ pub struct MultiFact {
 
 impl MultiFact {
     pub fn derive_facts(&self) -> Vec<Self> {}
-
-    fn from_eq_len_colinear(&self, colinear_idx: usize, eq_len_idx: usize) -> Option<Self> {
-        let Fact::Colinear(col_a, col_b, col_c) = &self.facts.get(colinear_idx)? else {
-            return None;
-        };
-        let Fact::EqualLength(eq_len1, eq_len2) = &self.facts.get(eq_len_idx)? else {
-            return None;
-        };
-
-        let EndpointInersection { overlap, distinct } = eq_len1.endpoint_intersection(eq_len2);
-
-        let center = if overlap.len() == 1 {
-            overlap[0]
-        } else {
-            return None;
-        };
-
-        let (end1, end2) = if distinct.len() == 2 {
-            (distinct[0], distinct[1])
-        } else {
-            return None;
-        };
-
-        // TODO: make this more efficient
-        let points = [col_a, col_b, col_c];
-        let mut hit = [false; 3];
-
-        for (p, hit) in points.into_iter().zip(hit.iter_mut()) {
-            *hit = p == center || p == end1 || p == end2;
-        }
-
-        if hit.into_iter().any(|b| !b) {
-            None
-        } else {
-            Some(Self {
-                facts: vec![Fact::Midpoint(
-                    center.clone(),
-                    Segment::from_points(end1.clone(), end2.clone()),
-                )],
-            })
-        }
-    }
-
-    fn from_midpoint(&self, midpoint_idx: usize) -> Option<Self> {
-        let midpoint = &self.facts.get(midpoint_idx)?;
-
-        if !matches!(midpoint, Fact::Midpoint(_, _)) {
-            return None;
-        }
-
-        Some(Self {
-            facts: midpoint.derive_facts(),
-        })
-    }
 }
 
 #[cfg(test)]
