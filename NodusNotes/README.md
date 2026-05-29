@@ -39,7 +39,7 @@ Read the [purpose statement](./Purpose.md).
 
 ## Current Status
 
-- It has not been started yet
+- Currently in the experimental planning phase
 
 ## Roadmap
 
