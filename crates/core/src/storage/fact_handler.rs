@@ -30,34 +30,40 @@ pub mod test {
     }
 
     impl FactHandler for TestFactHandler {
-        fn get_facts(&self) -> Box<[&Fact]> {
-            self.facts.iter().collect::<Box<[&Fact]>>()
+        fn get_facts(&self) -> &[Fact] {
+            &self.facts
         }
 
         fn add_fact(&mut self, fact: Fact) {
             self.facts.push(fact);
         }
 
-        /// THIS FUNCTION IS INCREDIBLY INNEFFICIENT
         fn find_derived_facts(&self) -> Vec<Fact> {
-            fn factorial(input: usize) -> usize {
-                #[cfg(target_arch = "x86")]
-                if input > 12 {
-                    panic!("Cannot fit factorials larger than 12! into a 32 bit usize")
-                };
-                #[cfg(target_arch = "x86_64")]
-                if input > 20 {
-                    panic!("Cannot fit factorials larger than 20! into a 64 bit usize")
-                };
+            let mut new_facts = Vec::new();
 
-                if input == 0 {
-                    1
-                } else {
-                    input * factorial(input - 1)
+            let mut colinear_facts = Vec::new();
+            let mut midpoint_facts = Vec::new();
+            let mut eq_len_facts = Vec::new();
+
+            for fact in &self.facts {
+                new_facts.append(&mut fact.derive_facts());
+
+                match fact {
+                    Fact::Midpoint(mid_point) => midpoint_facts.push(mid_point),
+                    Fact::EqualLength(equal_length) => eq_len_facts.push(equal_length),
+                    Fact::Colinear(colinear) => colinear_facts.push(colinear),
                 }
             }
 
-            let vectors: Vec<Vec<_>> = Vec::with_capacity(factorial(self.facts.len()));
+            for colinear in colinear_facts {
+                for eq_len in eq_len_facts.iter() {
+                    if let Some(derived_fact) = Fact::from_colinear_eq_len(colinear, eq_len) {
+                        new_facts.push(derived_fact);
+                    }
+                }
+            }
+
+            new_facts
         }
     }
 }

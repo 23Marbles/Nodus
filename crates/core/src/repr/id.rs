@@ -4,28 +4,11 @@ use smallvec::SmallVec;
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Hash)]
 #[repr(transparent)]
-pub struct Id(u64);
-
-impl Id {
-    // Must hold that x.combine_id_com(y) == y.combine_id_com(x)
-    fn combine_id_com(&self, other: &Self) -> Self {
-        let (x, y) = if self > other {
-            (self, other)
-        } else {
-            (other, self)
-        };
-
-        let mut hasher = DefaultHasher::new();
-        (x, y).hash(&mut hasher);
-        Id(hasher.finish())
-    }
-}
+pub struct Id(pub u64);
 
 #[derive(Debug, PartialEq, Clone, Hash)]
 #[repr(transparent)]
-pub struct PointId {
-    pub id: Id,
-}
+pub struct PointId(pub Id);
 
 #[derive(Debug, Clone, Hash)]
 pub struct Segment {
@@ -132,5 +115,18 @@ impl Segment {
         } else {
             None
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use crate::repr::id::{Id, PointId, Segment};
+
+    fn test_commutative() {
+        let (a, b) = (PointId(Id(0)), PointId(Id(1)));
+        assert_eq!(
+            Segment::from_points(a.clone(), b.clone()),
+            Segment::from_points(b, a)
+        );
     }
 }

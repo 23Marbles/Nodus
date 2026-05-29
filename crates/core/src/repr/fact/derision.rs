@@ -1,5 +1,5 @@
 use crate::repr::{
-    fact::fact_list::{Colinear, EqualLength, Fact, MidPoint},
+    fact::fact_list::{Colinear, EqualLength, Fact, Midpoint},
     id::{EndpointInersection, Segment},
 };
 
@@ -7,7 +7,7 @@ use crate::repr::{
 impl Fact {
     pub fn derive_facts(&self) -> Vec<Self> {
         match self {
-            Fact::Midpoint(MidPoint { point, segment }) => {
+            Fact::Midpoint(Midpoint { point, segment }) => {
                 let (a, b, c) = (&segment.a, point, &segment.b);
 
                 if b == a || b == c || segment.is_degenerate() {
@@ -40,21 +40,11 @@ impl Fact {
             }
         }
     }
-
-    pub fn binary_derivision(&self, other: &Fact) -> Option<Self> {
-        match (self, other) {
-            (Fact::EqualLength(eq_len), Fact::Colinear(colinear))
-            | (Fact::Colinear(colinear), Fact::EqualLength(eq_len)) => {
-                Self::from_colinear_eq_len(colinear, eq_len)
-            }
-            _ => todo!(),
-        }
-    }
 }
 
 /// Derision helpers
 impl Fact {
-    fn from_colinear_eq_len(colinear: &Colinear, eq_len: &EqualLength) -> Option<Fact> {
+    pub fn from_colinear_eq_len(colinear: &Colinear, eq_len: &EqualLength) -> Option<Fact> {
         let Colinear {
             point1: col_a,
             point2: col_b,
