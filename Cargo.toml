@@ -2,4 +2,4 @@
 name = "nodus"
 version = "0.1.0"
 edition = "2024"
-members = ["crates/experiments", "crates/core", "crates/nodus"]
+members = ["crates/experiments", "crates/core", "crates/nodus", "crates/dbg-graph"]

@@ -1,0 +1,7 @@
+[package]
+name = "dbg-graph"
+description = "debug visualisation of the debug graphs produced by nodus"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
