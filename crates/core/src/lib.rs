@@ -1,2 +1,2 @@
-pub mod repr;
+pub mod query;
 pub mod storage;
