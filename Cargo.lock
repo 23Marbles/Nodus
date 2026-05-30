@@ -3,6 +3,10 @@
 version = 4
 
 [[package]]
+name = "dbg-graph"
+version = "0.1.0"
+
+[[package]]
 name = "nodus"
 version = "0.1.0"
 
