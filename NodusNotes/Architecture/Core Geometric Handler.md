@@ -1,13 +1,16 @@
 # Geometric Handler
+
 This acts as entry point and storage for geometric positions and nodes.
 
 # What it has to do
+
 - Store facts
 - Answer queries based on these facts
 - Give a path from _given_ facts to queried data allowing the data to be computed
 - Handle impossible states elegantly
 
 Pseudocode:
+
 ```rust
 enum QueryResult<T> {
 	Exact(T),
@@ -16,7 +19,10 @@ enum QueryResult<T> {
 	UnderConstrained,
 }
 
-struct DerivedFrom(Vec<FactId>)
+struct DerivedFrom {
+	facts: Vec<FactId>,
+	rule: RuleId,
+}
 
 enum Transformation {
 	/// A fact that must be true based on its underlying facts was added
@@ -49,7 +55,7 @@ enum FactOrigin {
 	/// User inputted fact
 	Given,
 	/// Derived from other facts
-	Derived,
+	Derived(DerivedFrom),
 	/// Temporary constraints applied to the original points to help prove theorums
 	Assumed,
 	/// The program decided to insert this on its _own_ points
@@ -58,7 +64,11 @@ enum FactOrigin {
 
 struct FactSource {
 	origin: FactOrigin,
-	proved_by: Option<DerivedFrom>
+	proved_by: DerivedFrom,
+}
+
+trait Query {
+	type Output;
 }
 
 trait GeoHandler {
@@ -67,7 +77,7 @@ trait GeoHandler {
 	/// Used for debugging
 	fn get_transformation_history(&self) -> TransformHistory;
 	/// Determine the answer to a given query
-	fn query(&self, query: Query) -> QueryResult<T>;
+	fn query<Q: Query>(&self, query: Q) -> QueryResult<Q::Output>;;
 	fn add_fact(&mut self, source: FactSource, fact: Fact);
 }
 ```
