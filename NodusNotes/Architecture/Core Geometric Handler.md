@@ -17,8 +17,8 @@ enum QueryResult<T> {
 }
 
 struct DerivedFrom {
- facts: Vec<FactId>,
- link: RuleId,
+	facts: Vec<FactId>,
+	link: RuleId,
 }
 
 enum Transformation {
