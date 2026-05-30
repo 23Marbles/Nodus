@@ -27,7 +27,7 @@ struct DerivedFrom {
 enum Transformation {
 	/// A fact that must be true based on its underlying facts was added
 	DeriveFact {
-		from: DerivedFrom,
+		justification: DerivedFrom,
 		fact: FactId
 	},
 	/// A fact was added to give extra context
@@ -36,10 +36,8 @@ enum Transformation {
 	AddPoint(PointId),
 	/// Signals the points were joined to make way for new facts
 	/// Shapes are simply references to grouped points
-	JoinPoints {
-		points: Vec<PointId>,
-		join_shape: ShapeId,
-	}
+	/// and facts that build them up
+	CreateShape(ShapeId),
 }
 
 struct HistoricalTransformation {
