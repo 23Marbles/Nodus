@@ -16,12 +16,15 @@ enum QueryResult<T> {
 	UnderConstrained,
 }
 
-struct DerivedFrom(Vec<FactId>)
+struct DerivedFrom {
+ facts: Vec<FactId>,
+ link: RuleId,
+}
 
 enum Transformation {
 	/// A fact that must be true based on its underlying facts was added
 	DeriveFact {
-		from: DerivedFrom,
+		justification: DerivedFrom,
 		fact: FactId
 	},
 	/// A fact was added to give extra context
