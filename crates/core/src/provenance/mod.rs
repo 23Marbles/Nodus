@@ -1,3 +1,3 @@
 pub mod justification;
 pub mod origin;
-pub mod rule;
+pub mod rules;
