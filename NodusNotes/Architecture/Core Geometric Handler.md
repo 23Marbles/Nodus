@@ -9,7 +9,7 @@ This acts as entry point and storage for geometric positions and nodes.
 - Give a path from _given_ facts to queried data allowing the data to be computed
 - Handle impossible states elegantly
 
-Pseudocode:
+# Pseudocode
 
 ```rust
 enum QueryResult<T> {
@@ -58,11 +58,6 @@ enum FactOrigin {
 	Assumed,
 	/// The program decided to insert this on its _own_ points
 	Arbitrary,
-}
-
-struct FactSource {
-	origin: FactOrigin,
-	proved_by: DerivedFrom,
 }
 
 trait Query {
