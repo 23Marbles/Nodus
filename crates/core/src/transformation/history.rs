@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use crate::transformation::Transformation;
 
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Copy)]
 pub struct HistoryId(usize);
 
 pub struct HistoricalTransformation {
