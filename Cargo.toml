@@ -1,3 +1,10 @@
 [workspace]
-members = ["crates/experiments", "crates/core", "crates/nodus", "crates/dbg-graph"]
+members = [
+    "crates/experiments",
+    "crates/core",
+    "crates/nodus",
+    "crates/dbg-graph",
+    "crates/nodus-graph",
+    "crates/graph-editor",
+]
 resolver = "3"
