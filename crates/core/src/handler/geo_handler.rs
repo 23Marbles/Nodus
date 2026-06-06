@@ -2,6 +2,7 @@ use crate::{
     geometry::facts::Fact,
     provenance::origin::FactOrigin,
     query::{query::Query, query_result::QueryResult},
+    storage::fact_storage::FactStorage,
     transformation::history::TransformHistory,
 };
 
@@ -13,4 +14,7 @@ pub trait GeoHandler {
     /// Determine the answer to a given query
     fn query<Q: Query>(&self, query: Q) -> QueryResult<Q::Output>;
     fn add_fact(&mut self, origin: FactOrigin, fact: Fact);
+
+    fn get_fact_storage(&self) -> &FactStorage;
+    fn get_mut_fact_storage(&self) -> &FactStorage;
 }

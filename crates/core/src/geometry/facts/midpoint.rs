@@ -1,6 +1,7 @@
 use crate::geometry::{point::PointId, segment::Segment};
 
-pub struct MidPoint {
+#[derive(Debug, PartialEq, Eq, Clone)]
+pub struct Midpoint {
     pub center: PointId,
     pub segment: Segment,
 }
