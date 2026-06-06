@@ -1,2 +1,2 @@
-pub mod graphs;
-pub mod vertex;
+pub mod graph;
+pub mod sets;

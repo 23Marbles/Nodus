@@ -2,3 +2,11 @@
 name = "nodus-graph"
 version = "0.1.0"
 edition = "2024"
+
+[features]
+default = ["reflect"]
+reflect = ["bevy_reflect"]
+
+[dependencies]
+bevy_reflect = { version = "0.18.1", optional = true }
+thiserror = "2.0.18"

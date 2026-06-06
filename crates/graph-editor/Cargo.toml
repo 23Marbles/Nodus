@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+bevy_reflect = "0.18.1"
 eframe = "0.34.3"
 egui = "0.34.3"
-nodus-graph = { path = "../nodus-graph" }
+egui-toast = "0.20.0"
+nodus-graph = { path = "../nodus-graph", features = ["reflect"] }
