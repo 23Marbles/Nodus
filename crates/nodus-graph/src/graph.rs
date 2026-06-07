@@ -50,7 +50,7 @@ pub mod reflect {
     }
 
     pub trait ReflectEdges: Graph {
-        fn inspect_edge<'a>(&'a mut self, id: &EdgeId) -> ReflectEdgeDataRefMut<'a>;
+        fn inspect_edge<'a>(&'a mut self, id: &EdgeId) -> Option<ReflectEdgeDataRefMut<'a>>;
         fn inspect_edge_metadata(
             &mut self,
             id: &EdgeId,
