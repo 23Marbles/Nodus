@@ -1,7 +1,7 @@
 use crate::sets::{edge::EdgeId, vertex::NodeId};
+pub mod basic;
 #[cfg(feature = "reflect")]
 pub mod error;
-pub mod normal;
 
 pub trait Graph {
     fn node_ids(&self) -> Box<dyn Iterator<Item = NodeId> + '_>;
