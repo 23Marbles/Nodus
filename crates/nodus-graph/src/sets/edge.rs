@@ -8,7 +8,7 @@ use std::{
 
 use crate::sets::vertex::NodeId;
 
-pub struct EdgeData<I: IntoIterator<Item = NodeId>, M> {
+pub struct EdgeData<I: Iterator<Item = NodeId>, M> {
     pub coinident_nodes: I,
     pub meta: M,
 }

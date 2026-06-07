@@ -41,10 +41,14 @@ pub type ReflectEdgeData =
     EdgeData<Box<dyn Iterator<Item = NodeId>>, Box<dyn bevy_reflect::Reflect>>;
 
 #[cfg(feature = "reflect")]
+pub type ReflectEdgeDataRef<'a> =
+    EdgeData<&'a mut dyn Iterator<Item = NodeId>, &'a dyn bevy_reflect::Reflect>;
+
+#[cfg(feature = "reflect")]
 pub trait CreateEdges {
     fn default_edge(&self) -> ReflectEdgeData;
     fn insert_edge(&mut self, value: ReflectEdgeData) -> Result<EdgeId, InsertError>;
-    fn validate_edge(&self, value: ReflectEdgeData) -> Result<(), InsertError>;
+    fn validate_edge(&self, value: ReflectEdgeDataRef) -> Result<(), InsertError>;
 }
 
 #[cfg(feature = "reflect")]
