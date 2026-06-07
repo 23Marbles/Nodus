@@ -7,7 +7,7 @@ use crate::sets::{edge::EdgeId, vertex::NodeId};
 #[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
 pub enum InsertError {
     #[error("Expected type `{expected}`, got type `{got}`")]
-    WrongType { expected: Box<str>, got: Box<str> },
+    WrongType { expected: String, got: String },
     #[error("Validation errors (count = {len})", len = .0.len())]
     Validation(Vec<ValidationError>),
     #[error("Endpoints quantity should be {expected}, was `{got}`")]
