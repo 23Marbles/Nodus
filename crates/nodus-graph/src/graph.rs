@@ -59,4 +59,12 @@ pub mod reflect {
             new_endpoints: Box<dyn Iterator<Item = NodeId> + '_>,
         ) -> Result<(), InsertError>;
     }
+
+    #[cfg(test)]
+    fn implements_reflectable<T: ReflectableGraph>() {}
+
+    #[test]
+    fn basic_implements_reflectable() {
+        implements_reflectable::<basic::BasicGraph>();
+    }
 }
