@@ -1,9 +1,12 @@
 #[cfg(feature = "reflect")]
 use bevy_reflect::Reflect;
 
-#[cfg(feature = "reflect")]
-use crate::graph::error::InsertError;
 use crate::sets::{edge::EdgeId, vertex::NodeId};
+#[cfg(feature = "reflect")]
+use crate::{
+    graph::error::{EndpointRange, InsertError},
+    sets::edge::EdgeData,
+};
 
 pub mod error;
 pub mod normal;
@@ -34,18 +37,24 @@ pub trait ReflectNodes: Graph {
 }
 
 #[cfg(feature = "reflect")]
+pub type ReflectEdgeData =
+    EdgeData<Box<dyn Iterator<Item = NodeId>>, Box<dyn bevy_reflect::Reflect>>;
+
+#[cfg(feature = "reflect")]
 pub trait CreateEdges {
-    fn default_edge(&self) -> Box<dyn bevy_reflect::Reflect>;
-    fn insert_edge(&mut self, value: Box<dyn Reflect>) -> Result<EdgeId, InsertError>;
-    fn validate_edge(&self, value: &dyn Reflect) -> Result<(), InsertError>;
+    fn default_edge(&self) -> ReflectEdgeData;
+    fn insert_edge(&mut self, value: ReflectEdgeData) -> Result<EdgeId, InsertError>;
+    fn validate_edge(&self, value: ReflectEdgeData) -> Result<(), InsertError>;
 }
 
 #[cfg(feature = "reflect")]
 pub trait ReflectEdges: Graph {
+    fn inspect_edge(&mut self, id: &EdgeId) -> ReflectEdgeData;
     fn inspect_edge_metadata(
         &mut self,
         id: &EdgeId,
     ) -> Option<&mut dyn bevy_reflect::PartialReflect>;
+    fn endpoint_size(&self) -> EndpointRange;
     fn edge_endpoints(&self, id: &EdgeId) -> Option<Box<dyn Iterator<Item = NodeId> + '_>>;
     fn set_edge_endpoints(
         &mut self,

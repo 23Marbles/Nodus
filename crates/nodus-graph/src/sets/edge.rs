@@ -6,6 +6,13 @@ use std::{
     },
 };
 
+use crate::sets::vertex::NodeId;
+
+pub struct EdgeData<I: IntoIterator<Item = NodeId>, M> {
+    pub coinident_nodes: I,
+    pub meta: M,
+}
+
 #[derive(Debug, Default, Hash, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
 pub struct EdgeId(pub u16);
 
