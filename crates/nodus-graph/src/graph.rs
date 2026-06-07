@@ -40,9 +40,6 @@ pub mod reflect {
     pub type ReflectEdgeDataRef<'a> =
         EdgeData<&'a mut dyn Iterator<Item = NodeId>, &'a dyn bevy_reflect::Reflect>;
 
-    pub type ReflectEdgeDataRefMut<'a> =
-        EdgeData<&'a mut dyn Iterator<Item = NodeId>, &'a mut dyn bevy_reflect::Reflect>;
-
     pub trait CreateEdges {
         fn default_edge(&self) -> ReflectEdgeData;
         fn insert_edge(&mut self, value: ReflectEdgeData) -> Result<EdgeId, InsertError>;
@@ -50,7 +47,6 @@ pub mod reflect {
     }
 
     pub trait ReflectEdges: Graph {
-        fn inspect_edge<'a>(&'a mut self, id: &EdgeId) -> Option<ReflectEdgeDataRefMut<'a>>;
         fn inspect_edge_metadata(
             &mut self,
             id: &EdgeId,
