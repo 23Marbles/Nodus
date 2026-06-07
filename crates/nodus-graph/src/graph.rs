@@ -10,7 +10,7 @@ pub trait Graph {
     fn incident_nodes(&self, edge_id: &EdgeId) -> Option<Box<dyn Iterator<Item = NodeId> + '_>>;
 }
 
-mod reflect {
+pub mod reflect {
     use crate::{
         graph::error::{EndpointRange, InsertError},
         sets::edge::EdgeData,
@@ -50,7 +50,7 @@ mod reflect {
     }
 
     pub trait ReflectEdges: Graph {
-        fn inspect_edge(&mut self, id: &EdgeId) -> ReflectEdgeDataRefMut;
+        fn inspect_edge<'a>(&'a mut self, id: &EdgeId) -> ReflectEdgeDataRefMut<'a>;
         fn inspect_edge_metadata(
             &mut self,
             id: &EdgeId,
