@@ -11,6 +11,12 @@ pub struct BasicGraph {
     edges: HashMap<EdgeId, [NodeId; 2]>,
 }
 
+impl BasicGraph {
+    pub fn new(nodes: HashMap<NodeId, String>, edges: HashMap<EdgeId, [NodeId; 2]>) -> Self {
+        Self { nodes, edges }
+    }
+}
+
 impl Graph for BasicGraph {
     fn node_ids(&self) -> Box<dyn Iterator<Item = NodeId> + '_> {
         Box::new(self.nodes.keys().copied())
