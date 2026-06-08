@@ -9,3 +9,4 @@ eframe = "0.34.3"
 egui = "0.34.3"
 egui-toast = "0.20.0"
 nodus-graph = { path = "../nodus-graph", features = ["reflect"] }
+rand = "0.10.1"
